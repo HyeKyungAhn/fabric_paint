@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/fabric"></script>
+    <!-- <script src="https://unpkg.com/fabric@5.2.4/dist/fabric.min.js"></script> -->
+    <link rel="styleSheet" href="./css/style.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="border:1px solid #ccc"></canvas>
+    <div>
+        <input type="color" id="color_picker"/>
+        <div class="palette">
+            <div class="color-option" style="background-color: #27ae60" data-color="#27ae60"></div>
+            <div class="color-option" style="background-color: #2980b9" data-color="#2980b9"></div>
+            <div class="color-option" style="background-color: #8e44ad" data-color="#8e44ad"></div>
+            <div class="color-option" style="background-color: #2c3e50" data-color="#2c3e50"></div>
+            <div class="color-option" style="background-color: #f1c40f" data-color="#f1c40f"></div>
+        </div>
+        <input type="range" id="brushWidth" min="1" max="10" value="3"/>
+    </div>
+    <div>
+        <input type="button" id="eraser" value="지우개"/>
+        <input type="range" id="eraserWidth" min="1" max="10" value="5"/>
+        <input type="button" id="eraseAll" value="전체 지우기"/>
+    </div>
+    <div>
+        <input type="button" value="undo하기" onclick="undo()"/>
+        <input type="button" value="redo하기" onclick="redo()"/>
+    </div>
+    <button id="selectMode" onclick="changeDrawMode()" data-drawmode="true">선택</button>
+    <button id="textBoxBtn" onclick="textBox()">text</button>
+    <div>
+        <form id="imgLoader">
+            <input type="file" id="files" multiple/>
+        </form>
+    </div>
+
+    <!-- hidden right-click menu -->
+    <div class="hide" id="rMenu">
+        <ul class="rmenu_list">
+            <li>
+                <button class="removeObjBtn" onclick="onClickRmoveObjBtn()">삭제하기</button>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="./js/app.js"></script>
+    <script>
+        canvas._historyInit();
+
+        function undo(){
+            canvas.undo();
+        }
+
+        function redo(){
+            canvas.redo();
+        }
+
+        function changeDrawMode(){
+            let value;
+            let selectModeEl = document.getElementById('selectMode');
+            let mode = selectModeEl.dataset.drawmode;
+
+            mode == 'false' ? value = true : value = false;
+            canvas.changeDrawingMode(value);
+            selectModeEl.dataset.mode = value;
+        }
+
+        function textBox(){
+            canvas.getTextBox();
+        }
+
+        function onClickRmoveObjBtn(){
+            //바로 호출 가능
+            setTimeout(function(){
+                let sub = new SubCanvasClass();
+                sub.onRemoveObj();
+            }, 80);
+        }   
+
+
+    </script>
+</body>
+</html>
